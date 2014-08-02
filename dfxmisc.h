@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 // constants & macros
 
 #define DESTROY_FX_RULEZ
@@ -57,13 +57,14 @@ const float ONE_DIV_RAND_MAX = 1.0f / (float)RAND_MAX;
 #define SMARTELECTRONIX_URL "http://www.smartelectronix.com/"
 
 /* return the parameter with larger magnitude */
-inline float magmax(float a, float b) {
-  if (fabs(a) > fabs(b)) return a;
-  else return b;
+inline float magmax(float a, float b)
+{
+	if (fabs(a) > fabs(b)) return a;
+	else return b;
 }
 
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 // function prototypes
 
 long samplesToNextBar(VstTimeInfo *timeInfo);
@@ -72,10 +73,10 @@ void processProgramChangeEvents(VstEvents *events, AudioEffectX *effect);
 double LambertW(double input);
 
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 // inline functions
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 inline float interpolateHermite(float *data, double address, long arraysize)
 {
 	long pos = (long)address;
@@ -111,7 +112,7 @@ inline float interpolateLinear2values(float point1, float point2, double address
 	return (point1 * (1.0f-posFract)) + (point2 * posFract);
 }
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 // mutex stuff
 
 // POSIX
@@ -121,11 +122,18 @@ inline float interpolateLinear2values(float point1, float point2, double address
 struct dfxmutex {
 	int initErr, deleteErr, enterErr, exitErr;
 	pthread_mutex_t c;
-	dfxmutex() { initErr = pthread_mutex_init(&c, NULL); }
-	~dfxmutex() { deleteErr = pthread_mutex_destroy(&c); }
-	void grab () { enterErr = pthread_mutex_lock(&c); }
-	void release () { exitErr = pthread_mutex_unlock(&c);
-					//pthread_testcancel();
+	dfxmutex() {
+		initErr = pthread_mutex_init(&c, NULL);
+	}
+	~dfxmutex() {
+		deleteErr = pthread_mutex_destroy(&c);
+	}
+	void grab () {
+		enterErr = pthread_mutex_lock(&c);
+	}
+	void release () {
+		exitErr = pthread_mutex_unlock(&c);
+		//pthread_testcancel();
 	}
 };
 #endif

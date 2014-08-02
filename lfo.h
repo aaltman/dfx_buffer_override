@@ -12,18 +12,17 @@
 
 //-------------------------------------------------------------------------------------
 // these are the 8 LFO waveforms:
-enum
-{
-	kSineLFO,
-	kTriangleLFO,
-	kSquareLFO,
-	kSawLFO,
-	kReverseSawLFO,
-	kThornLFO,
-	kRandomLFO,
-	kRandomInterpolatingLFO,
+enum {
+    kSineLFO,
+    kTriangleLFO,
+    kSquareLFO,
+    kSawLFO,
+    kReverseSawLFO,
+    kThornLFO,
+    kRandomLFO,
+    kRandomInterpolatingLFO,
 
-	numLFOshapes
+    numLFOshapes
 };
 
 //-------------------------------------------------------------------------------------
@@ -44,7 +43,7 @@ const float LFO_SMOOTH_STEP = 1.0f / (float)LFO_SMOOTH_DUR;
 #define processLFOzero2two(A)   ( ((A)->processLFO() * 2.0f) - (A)->fDepth + 1.0f );
 
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 class LFO
 {
 public:
@@ -85,50 +84,44 @@ public:
 	//--------------------------------------------------------------------------------------
 	// This function wraps around the LFO table position when it passes the cycle end.
 	// It also sets up the smoothing counter if a discontiguous LFO waveform is being used.
-	void updatePosition(long numSteps = 1)
-	{
+	void updatePosition(long numSteps = 1) {
 		// increment the LFO position tracker
 		position += (stepSize * (float)numSteps);
 
-		if (position >= NUM_LFO_POINTS_FLOAT)
-		{
+		if (position >= NUM_LFO_POINTS_FLOAT) {
 			// wrap around the position tracker if it has made it past the end of the LFO table
 			position = fmodf(position, NUM_LFO_POINTS_FLOAT);
 			// get new random LFO values, too
 			oldRandomNumber = randomNumber;
 			randomNumber = (float)rand() / (float)RAND_MAX;
 			// set up the sample smoothing if a discontiguous waveform's cycle just ended
-			switch (LFOshapeScaled(fShape))
-			{
-				case kSquareLFO     :
-				case kSawLFO        :
-				case kReverseSawLFO :
-				case kRandomLFO     :
-					smoothSamples = LFO_SMOOTH_DUR;
-				default:
-					break;
+			switch (LFOshapeScaled(fShape)) {
+			case kSquareLFO     :
+			case kSawLFO        :
+			case kReverseSawLFO :
+			case kRandomLFO     :
+				smoothSamples = LFO_SMOOTH_DUR;
+			default:
+				break;
 			}
 		}
 
 		// special check for the square waveform - it also needs smoothing at the half point
-		else if (LFOshapeScaled(fShape) == kSquareLFO)
-		{
+		else if (LFOshapeScaled(fShape) == kSquareLFO) {
 			// check to see if it has just passed the halfway point
-			if ( ((long)position >= SQUARE_HALF_POINT) && 
-				 ((long)(position - stepSize) < SQUARE_HALF_POINT) )
+			if ( ((long)position >= SQUARE_HALF_POINT) &&
+			     ((long)(position - stepSize) < SQUARE_HALF_POINT) )
 				smoothSamples = LFO_SMOOTH_DUR;
 		}
 	}
 
 	//--------------------------------------------------------------------------------------
 	// this function gets the current 0.0 - 1.0 output value of the LFO & increments its position
-	float processLFO()
-	{
-	  float randiScalar, outValue;
-	  int shape = LFOshapeScaled(fShape);
+	float processLFO() {
+		float randiScalar, outValue;
+		int shape = LFOshapeScaled(fShape);
 
-		if (shape == kRandomInterpolatingLFO)
-		{
+		if (shape == kRandomInterpolatingLFO) {
 			// calculate how far into this LFO cycle we are so far, scaled from 0.0 to 1.0
 			randiScalar = position * LFO_TABLE_STEP;
 			// interpolate between the previous random number & the new one

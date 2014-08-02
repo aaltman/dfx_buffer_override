@@ -2,19 +2,17 @@
 #include "dfxmisc.h"
 #endif
 
-
-
 //-----------------------------------------------------------------------------------------
 // the calculates the number of samples until the next musical measure starts
 
 long samplesToNextBar(VstTimeInfo *timeInfo)
 {
-  // default these values to something reasonable in case they are not available from the host
-  double currentBarStartPos = 0.0, currentPPQpos = 0.0, meterNumerator = 4.0;
-  double currentTempoBPS, numPPQ;
-  long numSamples;
+	// default these values to something reasonable in case they are not available from the host
+	double currentBarStartPos = 0.0, currentPPQpos = 0.0, meterNumerator = 4.0;
+	double currentTempoBPS, numPPQ;
+	long numSamples;
 
- 
+
 	// exit immediately if timeInfo got returned NULL - there's nothing we can do in that case
 	if (timeInfo == NULL)
 		return 0;
@@ -63,18 +61,17 @@ long samplesToNextBar(VstTimeInfo *timeInfo)
 
 
 //-----------------------------------------------------------------------------------------
-// this should get called during processEvents() for a plugin that wants to handle 
+// this should get called during processEvents() for a plugin that wants to handle
 // MIDI program change events, but not any other MIDI events
 
 void processProgramChangeEvents(VstEvents *events, AudioEffectX *effect)
 {
-  VstMidiEvent *midiEvent;
-  int programNumber = -1;
-  long delta = 0;
+	VstMidiEvent *midiEvent;
+	int programNumber = -1;
+	long delta = 0;
 
 
-	for (long i = 0; (i < events->numEvents); i++)
-	{
+	for (long i = 0; (i < events->numEvents); i++) {
 		// check to see if this event is MIDI; if no, then we try the for-loop again
 		if ( ((events->events[i])->type) != kVstMidiType )
 			continue;
@@ -83,10 +80,8 @@ void processProgramChangeEvents(VstEvents *events, AudioEffectX *effect)
 		midiEvent = (VstMidiEvent*)events->events[i];
 
 		// program change
-		if ( (midiEvent->midiData[0] & 0xF0) == 0xC0 )
-		{
-			if (midiEvent->deltaFrames >= delta)
-			{
+		if ( (midiEvent->midiData[0] & 0xF0) == 0xC0 ) {
+			if (midiEvent->deltaFrames >= delta) {
 				programNumber = (midiEvent->midiData[1]) & 0x7F;	// program number
 				delta = midiEvent->deltaFrames;	// timing offset
 			}
@@ -104,7 +99,7 @@ void processProgramChangeEvents(VstEvents *events, AudioEffectX *effect)
 
 double LambertW(double input)
 {
-  double x = fabs(input);
+	double x = fabs(input);
 
 	if (x <= 500.0)
 		return 0.665 * ( 1.0 + (0.0195 * log(x+1.0)) ) * log(x+1.0) + 0.04;

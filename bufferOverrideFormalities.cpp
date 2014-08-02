@@ -68,8 +68,7 @@ BufferOverride::BufferOverride()
 	// also give currentTempoBPS a value in case that's useful for a freshly opened GUI
 	if (hostCanDoTempo == 1)
 		currentTempoBPS = (float)tempoAt(0) / 600000.0f;
-	if ( (hostCanDoTempo != 1) || (currentTempoBPS <= 0.0f) )
-	{
+	if ( (hostCanDoTempo != 1) || (currentTempoBPS <= 0.0f) ) {
 		setParameter( kTempo, tempoUnscaled(120.0f) );
 		currentTempoBPS = tempoScaled(fTempo) / 60.0f;
 	}
@@ -148,25 +147,24 @@ void BufferOverride::createAudioBuffers()
 	long oldMax = SUPER_MAX_BUFFER;
 	SUPER_MAX_BUFFER = (long) ((SAMPLERATE / MIN_ALLOWABLE_BPS) * 4.0f);
 
-	// if the sampling rate (& therefore the max buffer size) has changed, 
+	// if the sampling rate (& therefore the max buffer size) has changed,
 	// then delete & reallocate the buffers according to the sampling rate
-	if (SUPER_MAX_BUFFER != oldMax)
-	{
+	if (SUPER_MAX_BUFFER != oldMax) {
 		if (buffer1 != NULL)
 			delete[] buffer1;
 		buffer1 = NULL;
-	#ifdef BUFFEROVERRIDE_STEREO
+#ifdef BUFFEROVERRIDE_STEREO
 		if (buffer2 != NULL)
 			delete[] buffer2;
 		buffer2 = NULL;
-	#endif
+#endif
 	}
 	if (buffer1 == NULL)
 		buffer1 = new float[SUPER_MAX_BUFFER];
-	#ifdef BUFFEROVERRIDE_STEREO
+#ifdef BUFFEROVERRIDE_STEREO
 	if (buffer2 == NULL)
 		buffer2 = new float[SUPER_MAX_BUFFER];
-	#endif
+#endif
 }
 
 
@@ -175,32 +173,42 @@ void BufferOverride::createAudioBuffers()
 //-------------------------------------------------------------------------
 // Destroy FX infos
 
-bool BufferOverride::getEffectName(char *name) {
-	#ifdef BUFFEROVERRIDE_STEREO
+bool BufferOverride::getEffectName(char *name)
+{
+#ifdef BUFFEROVERRIDE_STEREO
 	strcpy(name, "Buffer Override (stereo)");	// name max 32 char
-	#else
+#else
 	strcpy(name, "Buffer Override (mono)");	// name max 32 char
-	#endif
-	return true; }
+#endif
+	return true;
+}
 
-long BufferOverride::getVendorVersion() {
-	return PLUGIN_VERSION; }
+long BufferOverride::getVendorVersion()
+{
+	return PLUGIN_VERSION;
+}
 
-bool BufferOverride::getErrorText(char *text) {
+bool BufferOverride::getErrorText(char *text)
+{
 	strcpy(text, "This is hopeless.");	// max 256 char
-	return true; }
+	return true;
+}
 
-bool BufferOverride::getVendorString(char *text) {
+bool BufferOverride::getVendorString(char *text)
+{
 	strcpy(text, "Destroy FX");	// a string identifying the vendor (max 64 char)
-	return true; }
+	return true;
+}
 
-bool BufferOverride::getProductString(char *text) {
+bool BufferOverride::getProductString(char *text)
+{
 	// a string identifying the product name (max 64 char)
 	strcpy(text, "Super Destroy FX bipolar VST plugin pack");
-	return true; }
+	return true;
+}
 
 //-----------------------------------------------------------------------------------------
-// this tells the host to keep calling process() for the duration of one forced buffer 
+// this tells the host to keep calling process() for the duration of one forced buffer
 // even if the audio input has ended
 
 long BufferOverride::getTailSize()
@@ -219,8 +227,7 @@ bool BufferOverride::getInputProperties(long index, VstPinProperties* properties
 	long ioFlags = kVstPinIsActive;
 #endif
 
-	if ( (index >= 0) && (index < numIns) )
-	{
+	if ( (index >= 0) && (index < numIns) ) {
 		sprintf(properties->label, "Buffer Override input %ld", index+1);
 		sprintf(properties->shortLabel, "in %ld", index+1);
 		properties->flags = ioFlags;
@@ -240,8 +247,7 @@ bool BufferOverride::getOutputProperties(long index, VstPinProperties* propertie
 	long ioFlags = kVstPinIsActive;
 #endif
 
-	if ( (index >= 0) && (index < numOuts) )
-	{
+	if ( (index >= 0) && (index < numOuts) ) {
 		sprintf (properties->label, "Buffer Override output %ld", index+1);
 		sprintf (properties->shortLabel, "out %ld", index+1);
 		properties->flags = ioFlags;
@@ -282,7 +288,7 @@ long BufferOverride::canDo(char* text)
 
 #pragma mark _________programs_________
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 BufferOverrideProgram::BufferOverrideProgram()
 {
 	name = new char[32];
@@ -312,7 +318,7 @@ BufferOverrideProgram::BufferOverrideProgram()
 	strcpy(name, "default");
 }
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 BufferOverrideProgram::~BufferOverrideProgram()
 {
 	if (name)
@@ -324,7 +330,7 @@ BufferOverrideProgram::~BufferOverrideProgram()
 //-------------------------------------------------------------------------
 void BufferOverride::initPresets()
 {
-  int i = 1;
+	int i = 1;
 
 	programs[i].param[kDivisor] = bufferDivisorUnscaled(4.0f);
 	programs[i].param[kBuffer] = paramSteppedUnscaled(8.7f, NUM_TEMPO_RATES);
@@ -436,16 +442,19 @@ void BufferOverride::initPresets()
 
 //-----------------------------------------------------------------------------
 long BufferOverride::getChunk(void **data, bool isPreset)
-{	return chunk->getChunk(data, isPreset);	}
+{
+	return chunk->getChunk(data, isPreset);
+}
 
 long BufferOverride::setChunk(void *data, long byteSize, bool isPreset)
-{	return chunk->setChunk(data, byteSize, isPreset);	}
+{
+	return chunk->setChunk(data, byteSize, isPreset);
+}
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 void BufferOverride::setProgram(long programNum)
 {
-	if ( (programNum < NUM_PROGRAMS) && (programNum >= 0) )
-	{
+	if ( (programNum < NUM_PROGRAMS) && (programNum >= 0) ) {
 		AudioEffectX::setProgram(programNum);
 
 		for (int i=0; i < NUM_PARAMETERS; i++)
@@ -476,8 +485,7 @@ void BufferOverride::getProgramName(char *name)
 //-------------------------------------------------------------------------
 bool BufferOverride::getProgramNameIndexed(long category, long index, char *text)
 {
-	if ( (index < NUM_PROGRAMS) && (index >= 0) )
-	{
+	if ( (index < NUM_PROGRAMS) && (index >= 0) ) {
 		strcpy(text, programs[index].name);
 		return true;
 	}
@@ -487,10 +495,8 @@ bool BufferOverride::getProgramNameIndexed(long category, long index, char *text
 //-------------------------------------------------------------------------
 bool BufferOverride::copyProgram(long destination)
 {
-	if ( (destination < NUM_PROGRAMS) && (destination >= 0) )
-	{
-		if (destination != curProgram)	// only copy it if it's a different program slot
-		{
+	if ( (destination < NUM_PROGRAMS) && (destination >= 0) ) {
+		if (destination != curProgram) {	// only copy it if it's a different program slot
 			for (long i = 0; i < NUM_PARAMETERS; i++)
 				programs[destination].param[i] = programs[curProgram].param[i];
 			strcpy(programs[destination].name, programs[curProgram].name);
@@ -506,61 +512,85 @@ bool BufferOverride::copyProgram(long destination)
 //-------------------------------------------------------------------------
 void BufferOverride::setParameter(long index, float value)
 {
-	switch (index)
-	{
-		case kDivisor :
-			fDivisor = value;
-			// tell MIDI trigger mode to respect this change
-			divisorWasChangedByHand = true;
-			break;
+	switch (index) {
+	case kDivisor :
+		fDivisor = value;
+		// tell MIDI trigger mode to respect this change
+		divisorWasChangedByHand = true;
+		break;
 
-		case kBuffer:
-			// make sure the cycles match up if the tempo rate has changed
-			if (tempoRateTable->getScalar(fBuffer) != tempoRateTable->getScalar(value))
-				needResync = true;
-			fBuffer = value;
-			break;
+	case kBuffer:
+		// make sure the cycles match up if the tempo rate has changed
+		if (tempoRateTable->getScalar(fBuffer) != tempoRateTable->getScalar(value))
+			needResync = true;
+		fBuffer = value;
+		break;
 
-		case kBufferTempoSync :
-			// set needResync true if tempo sync mode has just been switched on
-			if ( onOffTest(value) && !onOffTest(fBufferTempoSync) )
-				needResync = true;
-			fBufferTempoSync = value;
-			break;
+	case kBufferTempoSync :
+		// set needResync true if tempo sync mode has just been switched on
+		if ( onOffTest(value) && !onOffTest(fBufferTempoSync) )
+			needResync = true;
+		fBufferTempoSync = value;
+		break;
 
-		case kBufferInterrupt     : fBufferInterrupt = value;			break;
-		case kDivisorLFOrate      : divisorLFO->fRate = value;		break;
-		case kDivisorLFOdepth     : divisorLFO->fDepth = value;		break;
-		case kDivisorLFOshape     : divisorLFO->fShape = value;		break;
-		case kDivisorLFOtempoSync : divisorLFO->fTempoSync = value;	break;
-		case kBufferLFOrate       : bufferLFO->fRate = value;		break;
-		case kBufferLFOdepth      : bufferLFO->fDepth = value;		break;
-		case kBufferLFOshape      : bufferLFO->fShape = value;		break;
-		case kBufferLFOtempoSync  : bufferLFO->fTempoSync = value;	break;
-		case kSmooth              : fSmooth = value;				break;
-		case kDryWetMix           : fDryWetMix = value;				break;
-		case kPitchbend           : fPitchbend = value;				break;
-		case kMidiMode :
-			// reset all notes to off if we're switching into MIDI trigger mode
-			if ( (onOffTest(value) == true) && (onOffTest(fMidiMode) == false) )
-			{
-				midistuff->removeAllNotes();
-				divisorWasChangedByHand = false;
-			}
-			fMidiMode = value;
-			break;
-		case kTempo               : fTempo = value;					break;
+	case kBufferInterrupt     :
+		fBufferInterrupt = value;
+		break;
+	case kDivisorLFOrate      :
+		divisorLFO->fRate = value;
+		break;
+	case kDivisorLFOdepth     :
+		divisorLFO->fDepth = value;
+		break;
+	case kDivisorLFOshape     :
+		divisorLFO->fShape = value;
+		break;
+	case kDivisorLFOtempoSync :
+		divisorLFO->fTempoSync = value;
+		break;
+	case kBufferLFOrate       :
+		bufferLFO->fRate = value;
+		break;
+	case kBufferLFOdepth      :
+		bufferLFO->fDepth = value;
+		break;
+	case kBufferLFOshape      :
+		bufferLFO->fShape = value;
+		break;
+	case kBufferLFOtempoSync  :
+		bufferLFO->fTempoSync = value;
+		break;
+	case kSmooth              :
+		fSmooth = value;
+		break;
+	case kDryWetMix           :
+		fDryWetMix = value;
+		break;
+	case kPitchbend           :
+		fPitchbend = value;
+		break;
+	case kMidiMode :
+		// reset all notes to off if we're switching into MIDI trigger mode
+		if ( (onOffTest(value) == true) && (onOffTest(fMidiMode) == false) ) {
+			midistuff->removeAllNotes();
+			divisorWasChangedByHand = false;
+		}
+		fMidiMode = value;
+		break;
+	case kTempo               :
+		fTempo = value;
+		break;
 
-/* begin inter-plugin audio sharing stuff */
+		/* begin inter-plugin audio sharing stuff */
 #ifdef HUNGRY
-		case kConnect :
-			foodEater->setParameter(value);
-			break;
+	case kConnect :
+		foodEater->setParameter(value);
+		break;
 #endif
-/* end inter-plugin audio sharing stuff */
+		/* end inter-plugin audio sharing stuff */
 
-		default :
-			break;
+	default :
+		break;
 	}
 
 	if ( (index >= 0) && (index < NUM_PARAMETERS) )
@@ -570,30 +600,47 @@ void BufferOverride::setParameter(long index, float value)
 //-------------------------------------------------------------------------
 float BufferOverride::getParameter(long index)
 {
-	switch (index)
-	{
-		default:
-		case kDivisor             : return fDivisor;
-		case kBuffer              : return fBuffer;
-		case kBufferTempoSync     : return fBufferTempoSync;
-		case kBufferInterrupt     : return fBufferInterrupt;
-		case kDivisorLFOrate      : return divisorLFO->fRate;
-		case kDivisorLFOdepth     : return divisorLFO->fDepth;
-		case kDivisorLFOshape     : return divisorLFO->fShape;
-		case kDivisorLFOtempoSync : return divisorLFO->fTempoSync;
-		case kBufferLFOrate       : return bufferLFO->fRate;
-		case kBufferLFOdepth      : return bufferLFO->fDepth;
-		case kBufferLFOshape      : return bufferLFO->fShape;
-		case kBufferLFOtempoSync  : return bufferLFO->fTempoSync;
-		case kSmooth              : return fSmooth;
-		case kDryWetMix           : return fDryWetMix;
-		case kPitchbend           : return fPitchbend;
-		case kMidiMode            : return fMidiMode;
-		case kTempo               : return fTempo;
+	switch (index) {
+	default:
+	case kDivisor             :
+		return fDivisor;
+	case kBuffer              :
+		return fBuffer;
+	case kBufferTempoSync     :
+		return fBufferTempoSync;
+	case kBufferInterrupt     :
+		return fBufferInterrupt;
+	case kDivisorLFOrate      :
+		return divisorLFO->fRate;
+	case kDivisorLFOdepth     :
+		return divisorLFO->fDepth;
+	case kDivisorLFOshape     :
+		return divisorLFO->fShape;
+	case kDivisorLFOtempoSync :
+		return divisorLFO->fTempoSync;
+	case kBufferLFOrate       :
+		return bufferLFO->fRate;
+	case kBufferLFOdepth      :
+		return bufferLFO->fDepth;
+	case kBufferLFOshape      :
+		return bufferLFO->fShape;
+	case kBufferLFOtempoSync  :
+		return bufferLFO->fTempoSync;
+	case kSmooth              :
+		return fSmooth;
+	case kDryWetMix           :
+		return fDryWetMix;
+	case kPitchbend           :
+		return fPitchbend;
+	case kMidiMode            :
+		return fMidiMode;
+	case kTempo               :
+		return fTempo;
 
-		#ifdef HUNGRY
-		case kConnect             : return foodEater->fConnect;
-		#endif
+#ifdef HUNGRY
+	case kConnect             :
+		return foodEater->fConnect;
+#endif
 	}
 }
 
@@ -602,31 +649,64 @@ float BufferOverride::getParameter(long index)
 
 void BufferOverride::getParameterName(long index, char *label)
 {
-	switch (index)
-	{
-		case kDivisor             : strcpy(label, "buffer divisor");			break;
-		case kBuffer              : strcpy(label, "forced buffer size");		break;
-		case kBufferTempoSync     : strcpy(label, "forced buffer tempo sync");	break;
-		case kBufferInterrupt     : strcpy(label, "stuck buffer");				break;
-		case kDivisorLFOrate      : strcpy(label, "divisor LFO rate");			break;
-		case kDivisorLFOdepth     : strcpy(label, "divisor LFO depth");			break;
-		case kDivisorLFOshape     : strcpy(label, "divisor LFO shape");			break;
-		case kDivisorLFOtempoSync : strcpy(label, "divisor LFO tempo sync");	break;
-		case kBufferLFOrate       : strcpy(label, "buffer LFO rate");			break;
-		case kBufferLFOdepth      : strcpy(label, "buffer LFO depth");			break;
-		case kBufferLFOshape      : strcpy(label, "buffer LFO shape");			break;
-		case kBufferLFOtempoSync  : strcpy(label, "buffer LFO tempo sync");		break;
-		case kSmooth              : strcpy(label, "smooth");					break;
-		case kDryWetMix           : strcpy(label, "dry/wet mix");				break;
-		case kPitchbend           : strcpy(label, "pitchbend");					break;
-		case kMidiMode            : strcpy(label, "MIDI mode");					break;
-		case kTempo               : strcpy(label, "tempo");						break;
+	switch (index) {
+	case kDivisor             :
+		strcpy(label, "buffer divisor");
+		break;
+	case kBuffer              :
+		strcpy(label, "forced buffer size");
+		break;
+	case kBufferTempoSync     :
+		strcpy(label, "forced buffer tempo sync");
+		break;
+	case kBufferInterrupt     :
+		strcpy(label, "stuck buffer");
+		break;
+	case kDivisorLFOrate      :
+		strcpy(label, "divisor LFO rate");
+		break;
+	case kDivisorLFOdepth     :
+		strcpy(label, "divisor LFO depth");
+		break;
+	case kDivisorLFOshape     :
+		strcpy(label, "divisor LFO shape");
+		break;
+	case kDivisorLFOtempoSync :
+		strcpy(label, "divisor LFO tempo sync");
+		break;
+	case kBufferLFOrate       :
+		strcpy(label, "buffer LFO rate");
+		break;
+	case kBufferLFOdepth      :
+		strcpy(label, "buffer LFO depth");
+		break;
+	case kBufferLFOshape      :
+		strcpy(label, "buffer LFO shape");
+		break;
+	case kBufferLFOtempoSync  :
+		strcpy(label, "buffer LFO tempo sync");
+		break;
+	case kSmooth              :
+		strcpy(label, "smooth");
+		break;
+	case kDryWetMix           :
+		strcpy(label, "dry/wet mix");
+		break;
+	case kPitchbend           :
+		strcpy(label, "pitchbend");
+		break;
+	case kMidiMode            :
+		strcpy(label, "MIDI mode");
+		break;
+	case kTempo               :
+		strcpy(label, "tempo");
+		break;
 
-		#ifdef HUNGRY
-		case kConnect :
-			foodEater->getParameterName(label);
-			break;
-		#endif
+#ifdef HUNGRY
+	case kConnect :
+		foodEater->getParameterName(label);
+		break;
+#endif
 	}
 }
 
@@ -635,94 +715,93 @@ void BufferOverride::getParameterName(long index, char *label)
 
 void BufferOverride::getParameterDisplay(long index, char *text)
 {
-	switch (index)
-	{
-		case kDivisor :
-			if (bufferDivisorScaled(fDivisor) < 2.0f)
-				sprintf(text, "%.3f", 1.0f);
-			else
-				sprintf(text, "%.3f", bufferDivisorScaled(fDivisor));
-			break;
-		case kBuffer :
-			if (onOffTest(fBufferTempoSync))
-				strcpy(text, tempoRateTable->getDisplay(fBuffer));
-			else
-				sprintf(text, "%.1f", forcedBufferSizeScaled(fBuffer));
-			break;
-		case kBufferTempoSync :
-			if (onOffTest(fBufferTempoSync))
-				strcpy(text, "yes");
-			else
-				strcpy(text, "no");
-			break;
-		case kBufferInterrupt :
-			if (onOffTest(fBufferInterrupt))
-				strcpy(text, "yes");
-			else
-				strcpy(text, "no");
-			break;
-		case kDivisorLFOrate :
-			if (onOffTest(divisorLFO->fTempoSync))
-				strcpy(text, tempoRateTable->getDisplay(divisorLFO->fRate));
-			else
-				sprintf(text, "%.1f", LFOrateScaled(divisorLFO->fRate));
-			break;
-		case kDivisorLFOdepth :
-			sprintf(text, "%ld %%", (long)(divisorLFO->fDepth * 100.0f));
-			break;
-		case kDivisorLFOshape :
-			divisorLFO->getShapeName(text);
-			break;
-		case kDivisorLFOtempoSync :
-			if (onOffTest(divisorLFO->fTempoSync))
-				strcpy(text, "yes");
-			else
-				strcpy(text, "no");
-			break;
-		case kBufferLFOrate :
-			if (onOffTest(bufferLFO->fTempoSync))
-				strcpy(text, tempoRateTable->getDisplay(bufferLFO->fRate));
-			else
-				sprintf(text, "%.1f", LFOrateScaled(bufferLFO->fRate));
-			break;
-		case kBufferLFOdepth :
-			sprintf(text, "%ld %%", (long)(bufferLFO->fDepth * 100.0f));
-			break;
-		case kBufferLFOshape :
-			bufferLFO->getShapeName(text);
-			break;
-		case kBufferLFOtempoSync :
-			if (onOffTest(bufferLFO->fTempoSync))
-				strcpy(text, "yes");
-			else
-				strcpy(text, "no");
-			break;
-		case kSmooth :
-			sprintf(text, "%.1f %%", (fSmooth*100.0f));
-			break;
-		case kDryWetMix :
-			sprintf(text, "%ld %%", (long)(fDryWetMix*100.0f));
-			break;
-		case kPitchbend :
-			sprintf(text, "\xB1%.2f", fPitchbend*PITCHBEND_MAX);
-			break;
-		case kMidiMode :
-			if (onOffTest(fMidiMode))
-				sprintf(text, "trigger");
-			else
-				strcpy(text, "nudge");
-			break;
-		case kTempo :
-			if ( (fTempo > 0.0f) || (hostCanDoTempo != 1) )
-				sprintf(text, "%.3f", tempoScaled(fTempo));
-			else
-				strcpy(text, "auto");
-			break;
+	switch (index) {
+	case kDivisor :
+		if (bufferDivisorScaled(fDivisor) < 2.0f)
+			sprintf(text, "%.3f", 1.0f);
+		else
+			sprintf(text, "%.3f", bufferDivisorScaled(fDivisor));
+		break;
+	case kBuffer :
+		if (onOffTest(fBufferTempoSync))
+			strcpy(text, tempoRateTable->getDisplay(fBuffer));
+		else
+			sprintf(text, "%.1f", forcedBufferSizeScaled(fBuffer));
+		break;
+	case kBufferTempoSync :
+		if (onOffTest(fBufferTempoSync))
+			strcpy(text, "yes");
+		else
+			strcpy(text, "no");
+		break;
+	case kBufferInterrupt :
+		if (onOffTest(fBufferInterrupt))
+			strcpy(text, "yes");
+		else
+			strcpy(text, "no");
+		break;
+	case kDivisorLFOrate :
+		if (onOffTest(divisorLFO->fTempoSync))
+			strcpy(text, tempoRateTable->getDisplay(divisorLFO->fRate));
+		else
+			sprintf(text, "%.1f", LFOrateScaled(divisorLFO->fRate));
+		break;
+	case kDivisorLFOdepth :
+		sprintf(text, "%ld %%", (long)(divisorLFO->fDepth * 100.0f));
+		break;
+	case kDivisorLFOshape :
+		divisorLFO->getShapeName(text);
+		break;
+	case kDivisorLFOtempoSync :
+		if (onOffTest(divisorLFO->fTempoSync))
+			strcpy(text, "yes");
+		else
+			strcpy(text, "no");
+		break;
+	case kBufferLFOrate :
+		if (onOffTest(bufferLFO->fTempoSync))
+			strcpy(text, tempoRateTable->getDisplay(bufferLFO->fRate));
+		else
+			sprintf(text, "%.1f", LFOrateScaled(bufferLFO->fRate));
+		break;
+	case kBufferLFOdepth :
+		sprintf(text, "%ld %%", (long)(bufferLFO->fDepth * 100.0f));
+		break;
+	case kBufferLFOshape :
+		bufferLFO->getShapeName(text);
+		break;
+	case kBufferLFOtempoSync :
+		if (onOffTest(bufferLFO->fTempoSync))
+			strcpy(text, "yes");
+		else
+			strcpy(text, "no");
+		break;
+	case kSmooth :
+		sprintf(text, "%.1f %%", (fSmooth*100.0f));
+		break;
+	case kDryWetMix :
+		sprintf(text, "%ld %%", (long)(fDryWetMix*100.0f));
+		break;
+	case kPitchbend :
+		sprintf(text, "\xB1%.2f", fPitchbend*PITCHBEND_MAX);
+		break;
+	case kMidiMode :
+		if (onOffTest(fMidiMode))
+			sprintf(text, "trigger");
+		else
+			strcpy(text, "nudge");
+		break;
+	case kTempo :
+		if ( (fTempo > 0.0f) || (hostCanDoTempo != 1) )
+			sprintf(text, "%.3f", tempoScaled(fTempo));
+		else
+			strcpy(text, "auto");
+		break;
 
 #ifdef HUNGRY
-		case kConnect :
-			foodEater->getParameterDisplay(text);
-			break;
+	case kConnect :
+		foodEater->getParameterDisplay(text);
+		break;
 #endif
 	}
 }
@@ -732,31 +811,64 @@ void BufferOverride::getParameterDisplay(long index, char *text)
 
 void BufferOverride::getParameterLabel(long index, char *label)
 {
-	switch (index)
-	{
-		case kDivisor         : strcpy(label, " ");			break;
-		case kBuffer :
-			if (onOffTest(fBufferTempoSync))
-				strcpy(label, "buffers/beat");
-			else
-				strcpy(label, "samples");
-			break;
-		case kBufferTempoSync     : strcpy(label, " ");			break;
-		case kBufferInterrupt     : strcpy(label, " ");			break;
-		case kDivisorLFOrate      : strcpy(label, "Hz");		break;
-		case kDivisorLFOdepth     : strcpy(label, " ");			break;
-		case kDivisorLFOshape     : strcpy(label, " ");			break;
-		case kDivisorLFOtempoSync : strcpy(label, " ");			break;
-		case kBufferLFOrate       : strcpy(label, "Hz");		break;
-		case kBufferLFOdepth      : strcpy(label, " ");			break;
-		case kBufferLFOshape      : strcpy(label, " ");			break;
-		case kBufferLFOtempoSync  : strcpy(label, " ");			break;
-		case kSmooth              : strcpy(label, " ");			break;
-		case kDryWetMix           : strcpy(label, " ");			break;
-		case kPitchbend           : strcpy(label, "semitones");	break;
-		case kMidiMode            : strcpy(label, " ");			break;
-		case kTempo               : strcpy(label, "bpm");		break;
-		default: strcpy(label, " ");	break;
+	switch (index) {
+	case kDivisor         :
+		strcpy(label, " ");
+		break;
+	case kBuffer :
+		if (onOffTest(fBufferTempoSync))
+			strcpy(label, "buffers/beat");
+		else
+			strcpy(label, "samples");
+		break;
+	case kBufferTempoSync     :
+		strcpy(label, " ");
+		break;
+	case kBufferInterrupt     :
+		strcpy(label, " ");
+		break;
+	case kDivisorLFOrate      :
+		strcpy(label, "Hz");
+		break;
+	case kDivisorLFOdepth     :
+		strcpy(label, " ");
+		break;
+	case kDivisorLFOshape     :
+		strcpy(label, " ");
+		break;
+	case kDivisorLFOtempoSync :
+		strcpy(label, " ");
+		break;
+	case kBufferLFOrate       :
+		strcpy(label, "Hz");
+		break;
+	case kBufferLFOdepth      :
+		strcpy(label, " ");
+		break;
+	case kBufferLFOshape      :
+		strcpy(label, " ");
+		break;
+	case kBufferLFOtempoSync  :
+		strcpy(label, " ");
+		break;
+	case kSmooth              :
+		strcpy(label, " ");
+		break;
+	case kDryWetMix           :
+		strcpy(label, " ");
+		break;
+	case kPitchbend           :
+		strcpy(label, "semitones");
+		break;
+	case kMidiMode            :
+		strcpy(label, " ");
+		break;
+	case kTempo               :
+		strcpy(label, "bpm");
+		break;
+	default:
+		strcpy(label, " ");
+		break;
 	}
 }
 

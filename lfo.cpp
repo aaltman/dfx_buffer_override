@@ -60,7 +60,7 @@ void LFO::reset()
 
 void LFO::fillLFOtables()
 {
-  long i, n;
+	long i, n;
 
 
 	// fill the sine waveform table (oscillates from 0 to 1 & back to 0)
@@ -72,8 +72,7 @@ void LFO::fillLFOtables()
 	for (i = 0; (i < NUM_LFO_POINTS/2); i++)
 		triangleTable[i] = (float)i / (float)(NUM_LFO_POINTS/2);
 	// & ramp from 1 to 0 for the second half
-	for (n = 0; (i < NUM_LFO_POINTS); n++)
-	{
+	for (n = 0; (i < NUM_LFO_POINTS); n++) {
 		triangleTable[i] = 1.0f - ((float)n / (float)(NUM_LFO_POINTS/2));
 		i++;
 	}
@@ -83,8 +82,7 @@ void LFO::fillLFOtables()
 	for (i = 0; (i < NUM_LFO_POINTS/2); i++)
 		squareTable[i] = 1.0f;
 	// & 0 for the second half
-	for (n = 0; (i < NUM_LFO_POINTS); n++)
-	{
+	for (n = 0; (i < NUM_LFO_POINTS); n++) {
 		squareTable[i] = 0.0f;
 		i++;
 	}
@@ -102,8 +100,7 @@ void LFO::fillLFOtables()
 	for (i = 0; (i < NUM_LFO_POINTS/2); i++)
 		thornTable[i] = powf( ((float)i / (float)(NUM_LFO_POINTS/2)), 2.0f );
 	// & exponentially slope down from 1 to 0 for the second half
-	for (n = 0; (i < NUM_LFO_POINTS); n++)
-	{
+	for (n = 0; (i < NUM_LFO_POINTS); n++) {
 		thornTable[i] = powf( (1.0f - ((float)n / (float)(NUM_LFO_POINTS/2))), 2.0f );
 		i++;
 	}
@@ -113,17 +110,33 @@ void LFO::fillLFOtables()
 //--------------------------------------------------------------------------------------
 void LFO::getShapeName(char *nameString)
 {
-	switch (LFOshapeScaled(fShape))
-	{
-		case kSineLFO                : strcpy(nameString, "sine");					break;
-		case kTriangleLFO            : strcpy(nameString, "triangle");				break;
-		case kSquareLFO              : strcpy(nameString, "square");				break;
-		case kSawLFO                 : strcpy(nameString, "sawtooth");				break;
-		case kReverseSawLFO          : strcpy(nameString, "reverse sawtooth");		break;
-		case kThornLFO               : strcpy(nameString, "thorn");					break;
-		case kRandomLFO              : strcpy(nameString, "random");				break;
-		case kRandomInterpolatingLFO : strcpy(nameString, "random interpolating");	break;
-		default :																	break;
+	switch (LFOshapeScaled(fShape)) {
+	case kSineLFO                :
+		strcpy(nameString, "sine");
+		break;
+	case kTriangleLFO            :
+		strcpy(nameString, "triangle");
+		break;
+	case kSquareLFO              :
+		strcpy(nameString, "square");
+		break;
+	case kSawLFO                 :
+		strcpy(nameString, "sawtooth");
+		break;
+	case kReverseSawLFO          :
+		strcpy(nameString, "reverse sawtooth");
+		break;
+	case kThornLFO               :
+		strcpy(nameString, "thorn");
+		break;
+	case kRandomLFO              :
+		strcpy(nameString, "random");
+		break;
+	case kRandomInterpolatingLFO :
+		strcpy(nameString, "random interpolating");
+		break;
+	default :
+		break;
 	}
 }
 
@@ -133,29 +146,28 @@ void LFO::getShapeName(char *nameString)
 
 void LFO::pickTheLFOwaveform()
 {
-	switch (LFOshapeScaled(fShape))
-	{
-		case kSineLFO :
-			table = sineTable;
-			break;
-		case kTriangleLFO :
-			table = triangleTable;
-			break;
-		case kSquareLFO :
-			table = squareTable;
-			break;
-		case kSawLFO :
-			table = sawTable;
-			break;
-		case kReverseSawLFO :
-			table = reverseSawTable;
-			break;
-		case kThornLFO :
-			table = thornTable;
-			break;
-		default :
-			table = sineTable;
-			break;
+	switch (LFOshapeScaled(fShape)) {
+	case kSineLFO :
+		table = sineTable;
+		break;
+	case kTriangleLFO :
+		table = triangleTable;
+		break;
+	case kSquareLFO :
+		table = squareTable;
+		break;
+	case kSawLFO :
+		table = sawTable;
+		break;
+	case kReverseSawLFO :
+		table = reverseSawTable;
+		break;
+	case kThornLFO :
+		table = thornTable;
+		break;
+	default :
+		table = sineTable;
+		break;
 	}
 }
 
@@ -164,7 +176,7 @@ void LFO::pickTheLFOwaveform()
 
 void LFO::syncToTheBeat(long samplesToBar)
 {
-  float countdown, cyclesize;
+	float countdown, cyclesize;
 
 	// calculate how many samples long the LFO cycle is
 	cyclesize = NUM_LFO_POINTS_FLOAT / stepSize;

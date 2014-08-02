@@ -7,10 +7,10 @@
 #include <math.h>
 #include <stdlib.h>
 #if MAC
-	#include <fp.h>
+#include <fp.h>
 #endif
 #if WIN32
-	#include <float.h>
+#include <float.h>
 #endif
 
 
@@ -28,7 +28,7 @@ long BufferOverride::processEvents(VstEvents* events)
 //-----------------------------------------------------------------------------
 float BufferOverride::getDivisorParameterFromNote(int currentNote)
 {
-  float newDivisor;	// just a temporary value holder used in breaking down a computation into 2 steps
+	float newDivisor;	// just a temporary value holder used in breaking down a computation into 2 steps
 
 	// tell the GUI to update the divisor parameter's slider & value display
 	divisorWasChangedByMIDI = true;
@@ -36,18 +36,18 @@ float BufferOverride::getDivisorParameterFromNote(int currentNote)
 	divisorWasChangedByHand = false;
 
 	// this step gets the literal value for the new divisor
-	newDivisor = (float) ((double)forcedBufferSizeSamples(fBuffer)/(double)SAMPLERATE * 
-							midistuff->freqTable[currentNote] * pitchbend);
-	// this step scales that literal value into the appropriate value for fDivisor, 
+	newDivisor = (float) ((double)forcedBufferSizeSamples(fBuffer)/(double)SAMPLERATE *
+	                      midistuff->freqTable[currentNote] * pitchbend);
+	// this step scales that literal value into the appropriate value for fDivisor,
 	// the value that will rescale correctly (back to newDivisor) in the bufferDivisorScaled() macro
 	newDivisor = (newDivisor-DIVISOR_MIN) / (DIVISOR_MAX-DIVISOR_MIN);
 	// I don't know why, but even after checking if newDivisor>0.0 I still get not-a-numbers sometimes, so I prevent that
 	if (newDivisor > 0.0f)
-	#if MAC
+#if MAC
 		return ( isnan(sqrtf(newDivisor)) ? 0.0f : sqrtf(newDivisor) );
-	#else
+#else
 		return ( _isnan(sqrtf(newDivisor)) ? 0.0f : sqrtf(newDivisor) );
-	#endif
+#endif
 	// but skip the square-rooting if the value is negative (pitchbend went too low)
 	else
 		return 0.0f;
@@ -56,14 +56,13 @@ float BufferOverride::getDivisorParameterFromNote(int currentNote)
 //-----------------------------------------------------------------------------
 float BufferOverride::getDivisorParameterFromPitchbend(int pitchbendByte)
 {
-  float newDivisor;	// just a temporary value holder
+	float newDivisor;	// just a temporary value holder
 
 
 	oldPitchbend = pitchbend;
 
 	// bend pitch up
-	if (pitchbendByte > 64)
-	{
+	if (pitchbendByte > 64) {
 		// scale the MIDI value from 0.0 to 1.0
 		pitchbend = (double)(pitchbendByte - 64) / 63.0;
 		// then scale it according to tonal steps & the user defined range
@@ -71,8 +70,7 @@ float BufferOverride::getDivisorParameterFromPitchbend(int pitchbendByte)
 	}
 
 	// bend pitch down
-	else
-	{
+	else {
 		// scale the MIDI value from 0.0 to 1.0
 		pitchbend = (double)(64 - pitchbendByte) / 64.0;
 		// then scale it according to tonal steps & the user defined range
@@ -80,24 +78,23 @@ float BufferOverride::getDivisorParameterFromPitchbend(int pitchbendByte)
 	}
 
 	// only update the fDivisor value if we're in MIDI nudge mode or trigger mode with a note currently active
-	if ( (!onOffTest(fMidiMode)) || (onOffTest(fMidiMode) && (midistuff->noteQueue[0] >= 0)) )
-	{
+	if ( (!onOffTest(fMidiMode)) || (onOffTest(fMidiMode) && (midistuff->noteQueue[0] >= 0)) ) {
 		// tell the GUI to update the divisor parameter's slider & value display
 		divisorWasChangedByMIDI = true;
 
 		// this step gets the literal value for the new divisor
 		// you need to take into account where pitchbend is coming from, hence the division by oldPitchbend
 		newDivisor = (float) ((double)bufferDivisorScaled(fDivisor) * pitchbend/oldPitchbend);
-		// these step scale that literal value into the appropriate value for fDivisor, 
+		// these step scale that literal value into the appropriate value for fDivisor,
 		// the value that will rescale correctly (back to newDivisor) in the bufferDivisorScaled() macro
 		newDivisor = (newDivisor-DIVISOR_MIN) / (DIVISOR_MAX-DIVISOR_MIN);
 		// I don't know why, but even after checking if newDivisor>0.0 I still get not-a-numbers sometimes, so I prevent that
 		if (newDivisor > 0.0f)
-		#if MAC
+#if MAC
 			return ( isnan(sqrtf(newDivisor)) ? 0.0f : sqrtf(newDivisor) );
-		#else
+#else
 			return ( _isnan(sqrtf(newDivisor)) ? 0.0f : sqrtf(newDivisor) );
-		#endif
+#endif
 		// but skip the squarerooting if the value is negative (pitchbend went too low)
 		else
 			return 0.0f;
@@ -113,54 +110,46 @@ float BufferOverride::getDivisorParameterFromPitchbend(int pitchbendByte)
 
 void BufferOverride::heedBufferOverrideEvents(long samplePos)
 {
-  long eventcount;
-  bool foundNote;
-  float tempDivisor;
-  int foundNoteOn;
+	long eventcount;
+	bool foundNote;
+	float tempDivisor;
+	int foundNoteOn;
 
 
 	// look at the events if we have any
-	if (midistuff->numBlockEvents > 0)
-	{
+	if (midistuff->numBlockEvents > 0) {
 // SEARCH FOR NOTE
 		// initialize these to invalid values so that we can tell later what we really found
 		foundNote = false;
 		foundNoteOn = kInvalidMidi;
 		// search events from the beginning up until the current processing block position
-		for (eventcount = 0; eventcount < midistuff->numBlockEvents; eventcount++)
-		{
+		for (eventcount = 0; eventcount < midistuff->numBlockEvents; eventcount++) {
 			// don't search past the current processing block position
 			if (midistuff->blockEvents[eventcount].delta > samplePos)
 				break;
 
-			if (isNote(midistuff->blockEvents[eventcount].status))
-			{
+			if (isNote(midistuff->blockEvents[eventcount].status)) {
 				foundNote = true;
 				// update the notes table
-				if (midistuff->blockEvents[eventcount].status == kMidiNoteOn)
-				{
+				if (midistuff->blockEvents[eventcount].status == kMidiNoteOn) {
 					midistuff->insertNote(midistuff->blockEvents[eventcount].byte1);
 					foundNoteOn = midistuff->blockEvents[eventcount].byte1;
-				}
-				else
+				} else
 					midistuff->removeNote(midistuff->blockEvents[eventcount].byte1);
 
 				// I use the kInvalidMidi state in this plugin to mean that the note shouldn't be considered anymore
 				midistuff->blockEvents[eventcount].status = kInvalidMidi;
 			}
 
-			else if (midistuff->blockEvents[eventcount].status == ccAllNotesOff)
-			{
+			else if (midistuff->blockEvents[eventcount].status == ccAllNotesOff) {
 				foundNote = true;
 				midistuff->removeAllNotes();
 			}
 		}
 
 		// we found a valid new note, so update the fDivisor value if that note is still active
-		if (foundNote)
-		{
-			if ( (midistuff->noteQueue[0] >= 0) && ((foundNoteOn >= 0) || (!divisorWasChangedByHand)) )
-			{
+		if (foundNote) {
+			if ( (midistuff->noteQueue[0] >= 0) && ((foundNoteOn >= 0) || (!divisorWasChangedByHand)) ) {
 				// update the fDivisor parameter value
 				fDivisor = getDivisorParameterFromNote(midistuff->noteQueue[0]);
 				// false oldNote so it will be ignored until a new valid value is put into it
@@ -168,8 +157,7 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 				lastNoteOn = kInvalidMidi;
 			}
 			// if we're in MIDI nudge mode, allow the last note-on to update fDivisor even if the note is not still active
-			else if ( (!onOffTest(fMidiMode)) && (foundNoteOn >= 0) )
-			{
+			else if ( (!onOffTest(fMidiMode)) && (foundNoteOn >= 0) ) {
 				fDivisor = getDivisorParameterFromNote(foundNoteOn);
 				// false oldNote so it will be ignored until a new valid value is put into it
 				oldNote = false;
@@ -179,12 +167,10 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 
 // SEARCH FOR PITCHBEND
 		// search events backwards again looking for the most recent valid pitchbend
-		for (eventcount = (midistuff->numBlockEvents-1); (eventcount >= 0); eventcount--)
-		{
+		for (eventcount = (midistuff->numBlockEvents-1); (eventcount >= 0); eventcount--) {
 			// once we're below the current block position, pitchbend messages can be considered
-			if ( (midistuff->blockEvents[eventcount].delta <= samplePos) && 
-					(midistuff->blockEvents[eventcount].status == kMidiPitchbend) )
-			{
+			if ( (midistuff->blockEvents[eventcount].delta <= samplePos) &&
+			     (midistuff->blockEvents[eventcount].status == kMidiPitchbend) ) {
 				// update the fDivisor parameter value
 				tempDivisor = getDivisorParameterFromPitchbend(midistuff->blockEvents[eventcount].byte2);
 				// make sure that we ought to be updating fDivisor
@@ -196,8 +182,7 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 				lastPitchbend = kInvalidMidi;
 
 				// invalidate this & all earlier pitchbend messages so that they are not found in a future search
-				while (eventcount >= 0)
-				{
+				while (eventcount >= 0) {
 					if (midistuff->blockEvents[eventcount].status == kMidiPitchbend)
 						// I use the kInvalidMidi state in this plugin to mean that the note shouldn't be considered anymore
 						midistuff->blockEvents[eventcount].status = kInvalidMidi;
@@ -208,8 +193,7 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 	}
 
 	// check for an unused note leftover from a previous block
-	if ( (oldNote) && (!divisorWasChangedByHand) )
-	{
+	if ( (oldNote) && (!divisorWasChangedByHand) ) {
 		// only if a note is currently active
 		if (midistuff->noteQueue[0] >= 0)
 			fDivisor = getDivisorParameterFromNote(midistuff->noteQueue[0]);
@@ -222,8 +206,7 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 	lastNoteOn = kInvalidMidi;
 
 	// check for an unused pitchbend message leftover from a previous block
-	if (lastPitchbend >= 0)
-	{
+	if (lastPitchbend >= 0) {
 		// update the fDivisor parameter value
 		tempDivisor = getDivisorParameterFromPitchbend(lastPitchbend);
 		// make sure that we ought to be updating fDivisor
@@ -234,10 +217,9 @@ void BufferOverride::heedBufferOverrideEvents(long samplePos)
 		lastPitchbend = kInvalidMidi;
 	}
 
-	// if we're in MIDI trigger mode & no notes are active & the divisor hasn't been updated 
+	// if we're in MIDI trigger mode & no notes are active & the divisor hasn't been updated
 	// via normal parameter changes, then set fDivisor to 0.0 so that we get that effect punch-out
-	if ( (onOffTest(fMidiMode) && (midistuff->noteQueue[0] < 0)) && (!divisorWasChangedByHand) )
-	{
+	if ( (onOffTest(fMidiMode) && (midistuff->noteQueue[0] < 0)) && (!divisorWasChangedByHand) ) {
 		fDivisor = 0.0f;
 		divisorWasChangedByMIDI = true;
 	}
