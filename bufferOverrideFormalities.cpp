@@ -4,6 +4,8 @@
 #include "bufferOverride.hpp"
 #endif
 
+START_NAMESPACE_DISTRHO
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -14,9 +16,15 @@
 //-----------------------------------------------------------------------------
 // initializations & such
 
-BufferOverride::BufferOverride(audioMasterCallback audioMaster)
-	: AudioEffectX(audioMaster, NUM_PROGRAMS, NUM_PARAMETERS)	// 16 programs, 17 parameters
+BufferOverride::BufferOverride()
+	: Plugin(paramCount, NUM_PROGRAMS, NUM_PARAMETERS) // 16 programs, 17 parameters
 {
+	// set default values
+	d_setProgram(0);
+
+	// reset
+	d_deactivate();
+
 	buffer1 = NULL;
 #ifdef BUFFEROVERRIDE_STEREO
 	buffer2 = NULL;
@@ -24,21 +32,12 @@ BufferOverride::BufferOverride(audioMasterCallback audioMaster)
 	// default this to something, for the sake of getTailSize()
 	SUPER_MAX_BUFFER = (long) ((44100.0f / MIN_ALLOWABLE_BPS) * 4.0f);
 
-/* begin inter-plugin audio sharing stuff */
-#ifdef HUNGRY
-	#ifdef BUFFEROVERRIDE_STEREO
-	foodEater = new FoodEater(this, magic, 2);
-	#else
-	foodEater = new FoodEater(this, magic, 1);
-	#endif
-#else
-/* end inter-plugin audio sharing stuff */
-	#ifdef BUFFEROVERRIDE_STEREO
+#ifdef BUFFEROVERRIDE_STEREO
 	setNumInputs(2);	// stereo inputs; not a synth
 	canMono();	// it's okay to feed both inputs with the same signal
-	#else
+#else
 	setNumInputs(1);	// mono inputs; not a synth
-	#endif
+#endif
 #endif
 
 #ifdef BUFFEROVERRIDE_STEREO
@@ -48,11 +47,9 @@ BufferOverride::BufferOverride(audioMasterCallback audioMaster)
 	setNumOutputs(1);	// mono out
 	setUniqueID('bufM');	// identify Buffer Override mono
 #endif
-
 	canProcessReplacing();	// supports both accumulating and replacing output
 
 	// allocate memory for these structures
-	midistuff = new VstMidi;
 	tempoRateTable = new TempoRateTable;
 	divisorLFO = new LFO;
 	bufferLFO = new LFO;
@@ -101,13 +98,6 @@ BufferOverride::~BufferOverride()
 		delete divisorLFO;
 	if (bufferLFO)
 		delete bufferLFO;
-
-/* begin inter-plugin audio sharing stuff */
-#ifdef HUNGRY
-	if (foodEater)
-		delete foodEater;
-#endif
-/* end inter-plugin audio sharing stuff */
 }
 
 //-------------------------------------------------------------------------
@@ -769,3 +759,10 @@ void BufferOverride::getParameterLabel(long index, char *label)
 		default: strcpy(label, " ");	break;
 	}
 }
+
+Plugin* createPlugin()
+{
+	return new DistrhoPlugin3BandEQ();
+}
+
+END_NAMESPACE_DISTRHO

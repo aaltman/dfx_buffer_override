@@ -62,7 +62,7 @@ class BufferOverride : public Plugin
 {
 	friend class BufferOverrideEditor;
 public:
-	BufferOverride(audioMasterCallback audioMaster);
+	BufferOverride();
 	~BufferOverride();
 
 	enum Parameters {
