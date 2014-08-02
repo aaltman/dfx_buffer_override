@@ -4,8 +4,6 @@
 #include "bufferOverride.hpp"
 #endif
 
-
-
 //-----------------------------------------------------------------------------
 void BufferOverride::updateBuffer(long samplePos)
 {
@@ -13,7 +11,6 @@ void BufferOverride::updateBuffer(long samplePos)
 	bool barSync = false;	// true if we need to sync up with the next bar start
 	float divisorLFOvalue, bufferLFOvalue;	// the current output values of the LFOs
 	long prevForcedBufferSize;	// the previous forced buffer size
-
 
 	// take care of MIDI
 	heedBufferOverrideEvents(samplePos);
@@ -162,20 +159,9 @@ void BufferOverride::updateBuffer(long samplePos)
 
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
-void BufferOverride::doTheProcess(float **inputs, float **outputs, long sampleFrames, bool replacing)
+void BufferOverride::d_run(float **inputs, float **outputs, uint32_t sampleFrames)
 {
-	/* begin inter-plugin audio sharing stuff */
-#ifdef HUNGRY
-	if ( ! (foodEater->setupProcess(inputs, sampleFrames)) )
-		return;
-#endif
-	/* end inter-plugin audio sharing stuff */
-
-
 //-------------------------SAFETY CHECK----------------------
-#if MAC
-	// no memory allocations during interrupt
-#else
 	// there must have not been available memory or something (like WaveLab goofing up),
 	// so try to allocate buffers now
 	if ( (buffer1 == NULL)
@@ -184,7 +170,6 @@ void BufferOverride::doTheProcess(float **inputs, float **outputs, long sampleFr
 #endif
 	   )
 		createAudioBuffers();
-#endif
 	// if the creation failed, then abort audio processing
 	if (buffer1 == NULL)
 		return;
@@ -289,70 +274,13 @@ void BufferOverride::doTheProcess(float **inputs, float **outputs, long sampleFr
 			fadeOutGain = (realFadePart * fadeOutGain) - (imaginaryFadePart * fadeInGain);
 		}
 
-		// write the output samples into the output stream
-		if (replacing) {
-			outputs[0][samplecount] = (out1 * outputGain) + (inputs[0][samplecount] * inputGain);
+		outputs[0][samplecount] += (out1 * outputGain) + (inputs[0][samplecount] * inputGain);
 #ifdef BUFFEROVERRIDE_STEREO
-			outputs[1][samplecount] = (out2 * outputGain) + (inputs[1][samplecount] * inputGain);
+		outputs[1][samplecount] += (out2 * outputGain) + (inputs[1][samplecount] * inputGain);
 #endif
-		} else {
-			outputs[0][samplecount] += (out1 * outputGain) + (inputs[0][samplecount] * inputGain);
-#ifdef BUFFEROVERRIDE_STEREO
-			outputs[1][samplecount] += (out2 * outputGain) + (inputs[1][samplecount] * inputGain);
-#endif
-		}
 
 		// increment the position trackers
 		readPos++;
 		writePos++;
 	}
-
-
-//-----------------------MIDI STUFF---------------------------
-	// check to see if there may be a note or pitchbend message left over that hasn't been implemented
-	if (midistuff->numBlockEvents > 0) {
-		long eventcount;
-		for (eventcount = 0; eventcount < midistuff->numBlockEvents; eventcount++) {
-			if (isNote(midistuff->blockEvents[eventcount].status)) {
-				// regardless of whether it's a note-on or note-off, we've found some note message
-				oldNote = true;
-				// store the note & update the notes table if it's a note-on message
-				if (midistuff->blockEvents[eventcount].status == kMidiNoteOn) {
-					midistuff->insertNote(midistuff->blockEvents[eventcount].byte1);
-					lastNoteOn = midistuff->blockEvents[eventcount].byte1;
-					// since we're not doing the fDivisor updating yet, this needs to be falsed
-					divisorWasChangedByHand = false;
-				}
-				// otherwise remove the note from the notes table
-				else
-					midistuff->removeNote(midistuff->blockEvents[eventcount].byte1);
-			} else if (midistuff->blockEvents[eventcount].status == ccAllNotesOff) {
-				oldNote = true;
-				midistuff->removeAllNotes();
-			}
-		}
-		for (eventcount = (midistuff->numBlockEvents-1); (eventcount >= 0); eventcount--) {
-			if (midistuff->blockEvents[eventcount].status == kMidiPitchbend) {
-				// set this pitchbend message as lastPitchbend
-				lastPitchbend = midistuff->blockEvents[eventcount].byte2;
-				break;	// leave this for loop
-			}
-		}
-	}
-
-	// always reset numBlockEvents because processEvents() may not get called before the next process()
-	midistuff->numBlockEvents = 0;
-}
-
-
-//-----------------------------------------------------------------------------------------
-void BufferOverride::process(float **inputs, float **outputs, long sampleFrames)
-{
-	doTheProcess(inputs, outputs, sampleFrames, false);
-}
-
-//-----------------------------------------------------------------------------------------
-void BufferOverride::processReplacing(float **inputs, float **outputs, long sampleFrames)
-{
-	doTheProcess(inputs, outputs, sampleFrames, true);
 }

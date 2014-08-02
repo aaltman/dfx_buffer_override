@@ -72,6 +72,106 @@ BufferOverride::BufferOverride()
 		setParameter( kTempo, tempoUnscaled(120.0f) );
 		currentTempoBPS = tempoScaled(fTempo) / 60.0f;
 	}
+
+	// Set up the programs.
+	int i = 1;
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(4.0f);
+	programs[i].param[kBuffer] = paramSteppedUnscaled(8.7f, NUM_TEMPO_RATES);
+	programs[i].param[kBufferTempoSync] = 1.0f;
+	programs[i].param[kSmooth] = 0.09f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(37.0f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(444.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kBufferInterrupt] = 1.0f;
+	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(0.3f);
+	programs[i].param[kDivisorLFOdepth] = 0.72f;
+	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kSawLFO);
+	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
+	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(0.27f);
+	programs[i].param[kBufferLFOdepth] = 0.63f;
+	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kSawLFO);
+	programs[i].param[kBufferLFOtempoSync] = 0.0f;
+	programs[i].param[kSmooth] = 0.042f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	i++;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(170.0f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(128.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kBufferInterrupt] = 1.0f;
+	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(9.0f);
+	programs[i].param[kDivisorLFOdepth] = 0.87f;
+	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kThornLFO);
+	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
+	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(5.55f);
+	programs[i].param[kBufferLFOdepth] = 0.69f;
+	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kReverseSawLFO);
+	programs[i].param[kBufferLFOtempoSync] = 0.0f;
+	programs[i].param[kSmooth] = 0.201f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	i++;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(42.0f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(210.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kBufferInterrupt] = 1.0f;
+	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(3.78f);
+	programs[i].param[kDivisorLFOdepth] = 0.9f;
+	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kRandomLFO);
+	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
+	programs[i].param[kBufferLFOdepth] = 0.0f;
+	programs[i].param[kSmooth] = 0.039f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	i++;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(9.0f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(747.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kDivisorLFOrate] = 0.0f;
+	programs[i].param[kDivisorLFOdepth] = 0.0f;
+	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kTriangleLFO);
+	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
+	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(0.174f);
+	programs[i].param[kBufferLFOdepth] = 0.21f;
+	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kTriangleLFO);
+	programs[i].param[kBufferLFOtempoSync] = 0.0f;
+	programs[i].param[kSmooth] = 0.081f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	i++;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(2.001f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(603.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kDivisorLFOdepth] = 0.0f;
+	programs[i].param[kBufferLFOdepth] = 0.0f;
+	programs[i].param[kSmooth] = 1.0f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	i++;
+
+	programs[i].param[kDivisor] = bufferDivisorUnscaled(27.0f);
+	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(81.0f);
+	programs[i].param[kBufferTempoSync] = 0.0f;
+	programs[i].param[kBufferInterrupt] = 1.0f;
+	programs[i].param[kDivisorLFOrate] = paramSteppedUnscaled(6.6f, NUM_TEMPO_RATES);
+	programs[i].param[kDivisorLFOdepth] = 0.333f;
+	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kSineLFO);
+	programs[i].param[kDivisorLFOtempoSync] = 1.0f;
+	programs[i].param[kBufferLFOrate] = 0.0f;
+	programs[i].param[kBufferLFOdepth] = 0.06f;
+	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kSawLFO);
+	programs[i].param[kBufferLFOtempoSync] = 1.0f;
+	programs[i].param[kSmooth] = 0.06f;
+	programs[i].param[kDryWetMix] = 1.0f;
+	programs[i].param[kMidiMode] = 0.0f;
+	programs[i].param[kTempo] = 0.0f;
 }
 
 //-------------------------------------------------------------------------
@@ -100,7 +200,7 @@ BufferOverride::~BufferOverride()
 }
 
 //-------------------------------------------------------------------------
-void BufferOverride::suspend()
+void BufferOverride::d_deactivate()
 {
 	// setting the values like this will restart the forced buffer in the next process()
 	currentForcedBufferSize = 1;
@@ -120,15 +220,11 @@ void BufferOverride::suspend()
 	oldPitchbend = 1.0;
 	divisorWasChangedByMIDI = divisorWasChangedByHand = false;
 	midistuff->reset();
-
-#ifdef HUNGRY	// inter-plugin audio sharing stuff
-	foodEater->suspend();
-#endif
 }
 
 //-----------------------------------------------------------------------------
 // this gets called when the plugin is activated
-void BufferOverride::resume()
+void BufferOverride::d_activate()
 {
 	needResync = true;	// some hosts may call resume when restarting playback
 	wantEvents();
@@ -137,10 +233,10 @@ void BufferOverride::resume()
 }
 
 //-------------------------------------------------------------------------
-void BufferOverride::createAudioBuffers()
+void BufferOverride::d_sampleRateChanged(double newSampleRate)
 {
 	// update the sample rate value
-	SAMPLERATE = getSampleRate();
+	SAMPLERATE = newSampleRate;
 	// just in case the host responds with something wacky
 	if (SAMPLERATE <= 0.0f)
 		SAMPLERATE = 44100.0f;
@@ -165,124 +261,6 @@ void BufferOverride::createAudioBuffers()
 	if (buffer2 == NULL)
 		buffer2 = new float[SUPER_MAX_BUFFER];
 #endif
-}
-
-
-#pragma mark _________info_________
-
-//-------------------------------------------------------------------------
-// Destroy FX infos
-
-bool BufferOverride::getEffectName(char *name)
-{
-#ifdef BUFFEROVERRIDE_STEREO
-	strcpy(name, "Buffer Override (stereo)");	// name max 32 char
-#else
-	strcpy(name, "Buffer Override (mono)");	// name max 32 char
-#endif
-	return true;
-}
-
-long BufferOverride::getVendorVersion()
-{
-	return PLUGIN_VERSION;
-}
-
-bool BufferOverride::getErrorText(char *text)
-{
-	strcpy(text, "This is hopeless.");	// max 256 char
-	return true;
-}
-
-bool BufferOverride::getVendorString(char *text)
-{
-	strcpy(text, "Destroy FX");	// a string identifying the vendor (max 64 char)
-	return true;
-}
-
-bool BufferOverride::getProductString(char *text)
-{
-	// a string identifying the product name (max 64 char)
-	strcpy(text, "Super Destroy FX bipolar VST plugin pack");
-	return true;
-}
-
-//-----------------------------------------------------------------------------------------
-// this tells the host to keep calling process() for the duration of one forced buffer
-// even if the audio input has ended
-
-long BufferOverride::getTailSize()
-{
-	return SUPER_MAX_BUFFER;
-}
-
-//------------------------------------------------------------------------
-bool BufferOverride::getInputProperties(long index, VstPinProperties* properties)
-{
-#ifdef BUFFEROVERRIDE_STEREO
-	long numIns = 2;
-	long ioFlags = kVstPinIsStereo | kVstPinIsActive;
-#else
-	long numIns = 1;
-	long ioFlags = kVstPinIsActive;
-#endif
-
-	if ( (index >= 0) && (index < numIns) ) {
-		sprintf(properties->label, "Buffer Override input %ld", index+1);
-		sprintf(properties->shortLabel, "in %ld", index+1);
-		properties->flags = ioFlags;
-		return true;
-	}
-	return false;
-}
-
-//------------------------------------------------------------------------
-bool BufferOverride::getOutputProperties(long index, VstPinProperties* properties)
-{
-#ifdef BUFFEROVERRIDE_STEREO
-	long numOuts = 2;
-	long ioFlags = kVstPinIsStereo | kVstPinIsActive;
-#else
-	long numOuts = 1;
-	long ioFlags = kVstPinIsActive;
-#endif
-
-	if ( (index >= 0) && (index < numOuts) ) {
-		sprintf (properties->label, "Buffer Override output %ld", index+1);
-		sprintf (properties->shortLabel, "out %ld", index+1);
-		properties->flags = ioFlags;
-		return true;
-	}
-	return false;
-}
-
-//-----------------------------------------------------------------------------------------
-// this tells the host what BufferOverride can do
-
-long BufferOverride::canDo(char* text)
-{
-	if (strcmp(text, "receiveVstEvents") == 0)
-		return 1;
-	if (strcmp(text, "receiveVstMidiEvent") == 0)
-		return 1;
-	if (strcmp(text, "receiveVstTimeInfo") == 0)
-		return 1;
-	if (strcmp(text, "plugAsChannelInsert") == 0)
-		return 1;
-	if (strcmp(text, "plugAsSend") == 0)
-		return 1;
-	if (strcmp(text, "mixDryWet") == 0)
-		return 1;
-	if (strcmp(text, "1in1out") == 0)
-		return 1;
-#ifdef BUFFEROVERRIDE_STEREO
-	if (strcmp(text, "1in2out") == 0)
-		return 1;
-	if (strcmp(text, "2in2out") == 0)
-		return 1;
-#endif
-
-	return -1;	// explicitly can't do; 0 means "I don't know."
 }
 
 
@@ -311,10 +289,6 @@ BufferOverrideProgram::BufferOverrideProgram()
 	param[kPitchbend] = 6.0f / (float)PITCHBEND_MAX;
 	param[kMidiMode] = 0.0f;	// default to "nudge" mode
 	param[kTempo] = 0.0f;	// default to "auto" (i.e. get it from the host)
-#ifdef HUNGRY
-	param[kConnect] = 0.0f;	// default to disconnected
-#endif
-
 	strcpy(name, "default");
 }
 
@@ -327,190 +301,47 @@ BufferOverrideProgram::~BufferOverrideProgram()
 		delete[] param;
 }
 
-//-------------------------------------------------------------------------
-void BufferOverride::initPresets()
+void BufferOverride::d_initProgramName(uint32_t index, d_string& programName)
 {
-	int i = 1;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(4.0f);
-	programs[i].param[kBuffer] = paramSteppedUnscaled(8.7f, NUM_TEMPO_RATES);
-	programs[i].param[kBufferTempoSync] = 1.0f;
-	programs[i].param[kSmooth] = 0.09f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "drum roll");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(37.0f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(444.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kBufferInterrupt] = 1.0f;
-	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(0.3f);
-	programs[i].param[kDivisorLFOdepth] = 0.72f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kSawLFO);
-	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
-	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(0.27f);
-	programs[i].param[kBufferLFOdepth] = 0.63f;
-	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kSawLFO);
-	programs[i].param[kBufferLFOtempoSync] = 0.0f;
-	programs[i].param[kSmooth] = 0.042f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "arpeggio");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(170.0f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(128.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kBufferInterrupt] = 1.0f;
-	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(9.0f);
-	programs[i].param[kDivisorLFOdepth] = 0.87f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kThornLFO);
-	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
-	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(5.55f);
-	programs[i].param[kBufferLFOdepth] = 0.69f;
-	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kReverseSawLFO);
-	programs[i].param[kBufferLFOtempoSync] = 0.0f;
-	programs[i].param[kSmooth] = 0.201f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "laser");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(42.0f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(210.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kBufferInterrupt] = 1.0f;
-	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(3.78f);
-	programs[i].param[kDivisorLFOdepth] = 0.9f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kRandomLFO);
-	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
-	programs[i].param[kBufferLFOdepth] = 0.0f;
-	programs[i].param[kSmooth] = 0.039f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "sour melodies");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(9.0f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(747.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kDivisorLFOrate] = 0.0f;
-	programs[i].param[kDivisorLFOdepth] = 0.0f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kTriangleLFO);
-	programs[i].param[kDivisorLFOtempoSync] = 0.0f;
-	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(0.174f);
-	programs[i].param[kBufferLFOdepth] = 0.21f;
-	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kTriangleLFO);
-	programs[i].param[kBufferLFOtempoSync] = 0.0f;
-	programs[i].param[kSmooth] = 0.081f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "rerun");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(2.001f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(603.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kDivisorLFOdepth] = 0.0f;
-	programs[i].param[kBufferLFOdepth] = 0.0f;
-	programs[i].param[kSmooth] = 1.0f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	strcpy(programs[i].name, "\"echo\"");
-	i++;
-
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(27.0f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(81.0f);
-	programs[i].param[kBufferTempoSync] = 0.0f;
-	programs[i].param[kBufferInterrupt] = 1.0f;
-	programs[i].param[kDivisorLFOrate] = paramSteppedUnscaled(6.6f, NUM_TEMPO_RATES);
-	programs[i].param[kDivisorLFOdepth] = 0.333f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kSineLFO);
-	programs[i].param[kDivisorLFOtempoSync] = 1.0f;
-	programs[i].param[kBufferLFOrate] = 0.0f;
-	programs[i].param[kBufferLFOdepth] = 0.06f;
-	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kSawLFO);
-	programs[i].param[kBufferLFOtempoSync] = 1.0f;
-	programs[i].param[kSmooth] = 0.06f;
-	programs[i].param[kDryWetMix] = 1.0f;
-	programs[i].param[kMidiMode] = 0.0f;
-	programs[i].param[kTempo] = 0.0f;
-	strcpy(programs[i].name, "squeegee");
-	i++;
+	switch (index) {
+		case 1:	
+			programName = "drum roll";
+			break;
+		case 2:
+			programName = "arpeggio";
+			break;
+		case 3:
+			programName = "laser";
+			break;
+		case 4:
+			programName = "sour melodies";
+			break;
+		case 5:
+			programName = "rerun";
+			break;
+		case 6:
+			programName = "\"echo\"";
+			break;
+		case 7:
+			programName = "squeegee";
+			break;
+	}
 }
 
 //-----------------------------------------------------------------------------
-long BufferOverride::getChunk(void **data, bool isPreset)
-{
-	return chunk->getChunk(data, isPreset);
-}
-
-long BufferOverride::setChunk(void *data, long byteSize, bool isPreset)
-{
-	return chunk->setChunk(data, byteSize, isPreset);
-}
-
-//-----------------------------------------------------------------------------
-void BufferOverride::setProgram(long programNum)
+void BufferOverride::d_setProgram(uint32_t programNum)
 {
 	if ( (programNum < NUM_PROGRAMS) && (programNum >= 0) ) {
-		AudioEffectX::setProgram(programNum);
-
-		for (int i=0; i < NUM_PARAMETERS; i++)
-			setParameter(i, programs[programNum].param[i]);
-
-		// tell the host to update the default editor display with the new settings
-		AudioEffectX::updateDisplay();
-		// tells the GUI to update its display
-//		editor->postUpdate();
-	}
-}
-
-//-------------------------------------------------------------------------
-void BufferOverride::setProgramName(char *name)
-{
-	strcpy(programs[curProgram].name, name);
-}
-
-//-------------------------------------------------------------------------
-void BufferOverride::getProgramName(char *name)
-{
-	if ( !strcmp(programs[curProgram].name, "default") )
-		sprintf(name, "default %ld", curProgram+1);
-	else
-		strcpy(name, programs[curProgram].name);
-}
-
-//-------------------------------------------------------------------------
-bool BufferOverride::getProgramNameIndexed(long category, long index, char *text)
-{
-	if ( (index < NUM_PROGRAMS) && (index >= 0) ) {
-		strcpy(text, programs[index].name);
-		return true;
-	}
-	return false;
-}
-
-//-------------------------------------------------------------------------
-bool BufferOverride::copyProgram(long destination)
-{
-	if ( (destination < NUM_PROGRAMS) && (destination >= 0) ) {
-		if (destination != curProgram) {	// only copy it if it's a different program slot
-			for (long i = 0; i < NUM_PARAMETERS; i++)
-				programs[destination].param[i] = programs[curProgram].param[i];
-			strcpy(programs[destination].name, programs[curProgram].name);
+		for (int i=0; i < NUM_PARAMETERS; i++) {
+			this->d_setParameterValue(i, programs[programNum].param[i]);
 		}
-		return true;
 	}
-	return false;
 }
-
 
 #pragma mark _________parameters_________
 
 //-------------------------------------------------------------------------
-void BufferOverride::setParameter(long index, float value)
+void BufferOverride::d_setParameterValue(uint32_t index, float value)
 {
 	switch (index) {
 	case kDivisor :
@@ -581,14 +412,6 @@ void BufferOverride::setParameter(long index, float value)
 		fTempo = value;
 		break;
 
-		/* begin inter-plugin audio sharing stuff */
-#ifdef HUNGRY
-	case kConnect :
-		foodEater->setParameter(value);
-		break;
-#endif
-		/* end inter-plugin audio sharing stuff */
-
 	default :
 		break;
 	}
@@ -598,7 +421,7 @@ void BufferOverride::setParameter(long index, float value)
 }
 
 //-------------------------------------------------------------------------
-float BufferOverride::getParameter(long index)
+float BufferOverride::d_getParameterValue(uint32_t index)
 {
 	switch (index) {
 	default:
@@ -636,12 +459,6 @@ float BufferOverride::getParameter(long index)
 		return fMidiMode;
 	case kTempo               :
 		return fTempo;
-
-#ifdef HUNGRY
-	case kConnect             :
-		return foodEater->fConnect;
-#endif
-	}
 }
 
 //-------------------------------------------------------------------------
@@ -701,12 +518,6 @@ void BufferOverride::getParameterName(long index, char *label)
 	case kTempo               :
 		strcpy(label, "tempo");
 		break;
-
-#ifdef HUNGRY
-	case kConnect :
-		foodEater->getParameterName(label);
-		break;
-#endif
 	}
 }
 
@@ -797,17 +608,8 @@ void BufferOverride::getParameterDisplay(long index, char *text)
 		else
 			strcpy(text, "auto");
 		break;
-
-#ifdef HUNGRY
-	case kConnect :
-		foodEater->getParameterDisplay(text);
-		break;
-#endif
 	}
 }
-
-//-------------------------------------------------------------------------
-// unit of measure for each parameter
 
 void BufferOverride::getParameterLabel(long index, char *label)
 {

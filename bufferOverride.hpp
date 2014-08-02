@@ -91,47 +91,15 @@ public:
 	    NUM_PARAMETERS
 	};
 
-	virtual void process(float **inputs, float **outputs, long sampleFrames);
-	virtual void processReplacing(float **inputs, float **outputs, long sampleFrames);
-
-	virtual void suspend();
-	virtual void resume();
+	virtual void d_deactivate();
+	virtual void d_activate();
 
 	virtual long processEvents(VstEvents* events);
-	virtual long getTailSize();
-	// there was a typo in the VST header files versions 2.0 through 2.2,
-	// so some hosts will still call this incorrectly named version...
-	virtual long getGetTailSize() {
-		return getTailSize();
-	}
-	virtual bool getInputProperties(long index, VstPinProperties* properties);
-	virtual bool getOutputProperties(long index, VstPinProperties* properties);
-
-	virtual long getChunk(void **data, bool isPreset);
-	virtual long setChunk(void *data, long byteSize, bool isPreset);
-
-	virtual void setProgram(long programNum);
-	virtual void setProgramName(char *name);
-	virtual void getProgramName(char *name);
-	virtual bool getProgramNameIndexed(long category, long index, char *text);
-	virtual bool copyProgram(long destination);
-
-	virtual void setParameter(long index, float value);
-	virtual float getParameter(long index);
-	virtual void getParameterName(long index, char *text);
-	virtual void getParameterDisplay(long index, char *text);
-	virtual void getParameterLabel(long index, char *label);
-
-	virtual bool getEffectName(char *name);
-	virtual long getVendorVersion();
-	virtual bool getErrorText(char *text);
-	virtual bool getVendorString(char *text);
-	virtual bool getProductString(char *text);
 
 	virtual long canDo(char* text);
 
 protected:
-	void doTheProcess(float **inputs, float **outputs, long sampleFrames, bool replacing);
+	void d_run(float **inputs, float **outputs, long sampleFrames, bool replacing);
 	void updateBuffer(long samplePos);
 
 	void heedBufferOverrideEvents(long samplePos);
@@ -139,13 +107,12 @@ protected:
 	float getDivisorParameterFromPitchbend(int pitchbendByte);
 
 	void initPresets();
-	void createAudioBuffers();
+	void d_sampleRateChanged(double newSampleRate);
 
 	// the parameters
 	float fDivisor, fBuffer, fBufferTempoSync, fBufferInterrupt, fSmooth, fDryWetMix, fPitchbend, fMidiMode, fTempo;
 
 	BufferOverrideProgram *programs;	// presets / program slots
-	VstChunk *chunk;	// chunky data
 
 	long currentForcedBufferSize;	// the size of the larger, imposed buffer
 	// these store the forced buffer
