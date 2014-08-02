@@ -1,19 +1,8 @@
 #ifndef __dfxmisc
 #define __dfxmisc
 
-#ifndef __audioeffectx__
-#include "audioeffectx.h"
-#endif
-
 #include <math.h>
 #include <stdlib.h>
-
-#ifdef WIN32
-/* turn off warnings about default but no cases in switch, etc. */
-   #pragma warning( disable : 4065 57 4200 4244 )
-   #include <windows.h>
-#endif
-
 
 //----------------------------------------------------------------------------- 
 // constants & macros
@@ -123,48 +112,7 @@ inline float interpolateLinear2values(float point1, float point2, double address
 }
 
 //----------------------------------------------------------------------------- 
-// I found this somewhere on the internet
-/*
-inline float anotherSqrt(float x)
-{
-	float result = 1.0f;
-	float store = 0.0f;
-	while (store != result)
-	{
-		store = result;
-		result = 0.5f * (result + (x / result));
-	}
-}
-*/
-
-
-//----------------------------------------------------------------------------- 
 // mutex stuff
-
-#if WIN32
-
-struct dfxmutex {
-	CRITICAL_SECTION c;
-	dfxmutex() { InitializeCriticalSection(&c); }
-	~dfxmutex() { DeleteCriticalSection(&c); }
-	void grab() { EnterCriticalSection(&c); }
-	void release() { LeaveCriticalSection(&c); }
-};
-
-/*
-#elif MAC
-
-// Multiprocessing Services
-#include <multiprocessing.h>
-struct dfxmutex {
-	OSStatus initErr, deleteErr, enterErr, exitErr;
-	MPCriticalRegionID c;
-	Duration timeout;	// in ms   (available constants:  kDurationImmediate, kDurationForever, kDurationMillisecond, kDurationMicrosecond)
-	dfxmutex() { initErr = MPCreateCriticalRegion(&c); }
-	~dfxmutex() { deleteErr = MPDeleteCriticalRegion(c); }
-	void grab () { enterErr = MPEnterCriticalRegion(c, kDurationForever); }
-	void release () { exitErr = MPExitCriticalRegion(c); }
-};
 
 // POSIX
 // can this even work for CFM?  perhaps only mach-o
@@ -180,18 +128,4 @@ struct dfxmutex {
 					//pthread_testcancel();
 	}
 };
-*/
-
-#else
-
-struct dfxmutex {
-	dfxmutex() {}
-	~dfxmutex() {}
-	void grab () {}
-	void release () {}
-};
-
-#endif
-
-
 #endif
