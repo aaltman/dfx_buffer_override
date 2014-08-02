@@ -93,18 +93,9 @@ public:
 
 	virtual void d_deactivate();
 	virtual void d_activate();
-
-	virtual long processEvents(VstEvents* events);
-
-	virtual long canDo(char* text);
-
 protected:
 	void d_run(float **inputs, float **outputs, long sampleFrames, bool replacing);
 	void updateBuffer(long samplePos);
-
-	void heedBufferOverrideEvents(long samplePos);
-	float getDivisorParameterFromNote(int currentNote);
-	float getDivisorParameterFromPitchbend(int pitchbendByte);
 
 	void initPresets();
 	void d_sampleRateChanged(double newSampleRate);
