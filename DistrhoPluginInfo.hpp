@@ -31,6 +31,6 @@
 #define DISTRHO_PLUGIN_WANT_STATE    0
 #define DISTRHO_PLUGIN_WANT_TIMEPOS  0
 
-#define DISTRHO_PLUGIN_URI ""
+#define DISTRHO_PLUGIN_URI "https://github.com/aaltman/dfx_buffer_override"
 
 #endif // DISTRHO_PLUGIN_INFO_H_INCLUDED
