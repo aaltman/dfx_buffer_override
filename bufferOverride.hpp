@@ -4,54 +4,14 @@
 #ifndef __bufferOverride
 #define __bufferOverride
 
-#include "vstmidi.h"
+#include "DistrhoPlugin.hpp"
+START_NAMESPACE_DISTRHO
+
 #include "dfxmisc.h"
 #include "lfo.h"
 #include "TempoRateTable.h"
-#include "vstchunk.h"
 
-/* begin inter-plugin audio sharing stuff */
-#ifdef HUNGRY
-	#include "FoodEater.h"
-	const OSType magic = 'Bfud';
-#endif
-/* end inter-plugin audio sharing stuff */
-
-
-//----------------------------------------------------------------------------- 
-// these are the plugin parameters:
-enum
-{
-	kDivisor,
-	kBuffer,
-	kBufferTempoSync,
-	kBufferInterrupt,
-
-	kDivisorLFOrate,
-	kDivisorLFOdepth,
-	kDivisorLFOshape,
-	kDivisorLFOtempoSync,
-	kBufferLFOrate,
-	kBufferLFOdepth,
-	kBufferLFOshape,
-	kBufferLFOtempoSync,
-
-	kSmooth,
-	kDryWetMix,
-
-	kPitchbend,
-	kMidiMode,
-
-	kTempo,
-
-#ifdef HUNGRY
-	kConnect,
-#endif
-
-	NUM_PARAMETERS
-};
-
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 // constants & macros
 
 #define DIVISOR_MIN 1.92f
@@ -84,10 +44,10 @@ enum
 #define PLUGIN_ID 'bufS'
 
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 class BufferOverrideProgram
 {
-friend class BufferOverride;
+	friend class BufferOverride;
 public:
 	BufferOverrideProgram();
 	~BufferOverrideProgram();
@@ -97,14 +57,39 @@ private:
 };
 
 
-//----------------------------------------------------------------------------- 
-
-class BufferOverride : public AudioEffectX
+//-----------------------------------------------------------------------------
+class BufferOverride : public Plugin
 {
-friend class BufferOverrideEditor;
+	friend class BufferOverrideEditor;
 public:
 	BufferOverride(audioMasterCallback audioMaster);
 	~BufferOverride();
+
+	enum Parameters {
+	    kDivisor = 0,
+	    kBuffer,
+	    kBufferTempoSync,
+	    kBufferInterrupt,
+
+	    kDivisorLFOrate,
+	    kDivisorLFOdepth,
+	    kDivisorLFOshape,
+	    kDivisorLFOtempoSync,
+	    kBufferLFOrate,
+	    kBufferLFOdepth,
+	    kBufferLFOshape,
+	    kBufferLFOtempoSync,
+
+	    kSmooth,
+	    kDryWetMix,
+
+	    kPitchbend,
+	    kMidiMode,
+
+	    kTempo,
+
+	    NUM_PARAMETERS
+	};
 
 	virtual void process(float **inputs, float **outputs, long sampleFrames);
 	virtual void processReplacing(float **inputs, float **outputs, long sampleFrames);
@@ -114,9 +99,11 @@ public:
 
 	virtual long processEvents(VstEvents* events);
 	virtual long getTailSize();
-	// there was a typo in the VST header files versions 2.0 through 2.2, 
+	// there was a typo in the VST header files versions 2.0 through 2.2,
 	// so some hosts will still call this incorrectly named version...
-	virtual long getGetTailSize() { return getTailSize(); }
+	virtual long getGetTailSize() {
+		return getTailSize();
+	}
 	virtual bool getInputProperties(long index, VstPinProperties* properties);
 	virtual bool getOutputProperties(long index, VstPinProperties* properties);
 
@@ -142,7 +129,6 @@ public:
 	virtual bool getProductString(char *text);
 
 	virtual long canDo(char* text);
-
 
 protected:
 	void doTheProcess(float **inputs, float **outputs, long sampleFrames, bool replacing);
@@ -199,11 +185,50 @@ protected:
 
 	LFO *divisorLFO, *bufferLFO;
 
-#ifdef HUNGRY
-	FoodEater *foodEater;
-#endif
-
 	float fadeOutGain, fadeInGain, realFadePart, imaginaryFadePart;	// for trig crossfading
+
+	// Distrho plugin functions
+	const char* d_getLabel() const noexcept override {
+		return "DestroyFX Buffer Override";
+	}
+
+	const char* d_getMaker() const noexcept override {
+		return "DestroyFX";
+	}
+
+	const char* d_getLicense() const noexcept override {
+		return "GPL";
+	}
+
+	uint32_t d_getVersion() const noexcept override {
+		return 0x1000;
+	}
+
+	long d_getUniqueId() const noexcept override {
+		return d_cconst('D', 'X', 'B', 'O');
+	}
+
+	// -------------------------------------------------------------------
+	// Init
+
+	void d_initParameter(uint32_t index, Parameter& parameter) override;
+	void d_initProgramName(uint32_t index, d_string& programName) override;
+
+	// -------------------------------------------------------------------
+	// Internal data
+
+	float d_getParameterValue(uint32_t index) const override;
+	void  d_setParameterValue(uint32_t index, float value) override;
+	void  d_setProgram(uint32_t index) override;
+
+	// -------------------------------------------------------------------
+	// Process
+
+	void d_activate() override;
+	void d_deactivate() override;
+	void d_run(const float** inputs, float** outputs, uint32_t frames) override;
 };
+
+END_NAMESPACE_DISTRHO
 
 #endif

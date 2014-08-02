@@ -442,28 +442,6 @@ void BufferOverride::initPresets()
 	programs[i].param[kTempo] = 0.0f;
 	strcpy(programs[i].name, "squeegee");
 	i++;
-
-/*
-	programs[i].param[kDivisor] = bufferDivisorUnscaled(f);
-	programs[i].param[kBuffer] = forcedBufferSizeUnscaled(f);
-	programs[i].param[kBufferTempoSync] = .0f;
-	programs[i].param[kBufferInterrupt] = .0f;
-	programs[i].param[kDivisorLFOrate] = LFOrateUnscaled(.f);
-	programs[i].param[kDivisorLFOdepth] = f;
-	programs[i].param[kDivisorLFOshape] = LFOshapeUnscaled(kLFO);
-	programs[i].param[kDivisorLFOtempoSync] = .0f;
-	programs[i].param[kBufferLFOrate] = LFOrateUnscaled(.f);
-	programs[i].param[kBufferLFOdepth] = f;
-	programs[i].param[kBufferLFOshape] = LFOshapeUnscaled(kLFO);
-	programs[i].param[kBufferLFOtempoSync] = .0f;
-	programs[i].param[kSmooth] = f;
-	programs[i].param[kDryWetMix] = f;
-	programs[i].param[kPitchbend] = f / PITCHBEND_MAX;
-	programs[i].param[kMidiMode] = .0f;
-	programs[i].param[kTempo] = (f - TEMPO_MIN) / TEMPO_RANGE;
-	strcpy(programs[i].name, "");
-	i++;
-*/
 }
 
 //-----------------------------------------------------------------------------
